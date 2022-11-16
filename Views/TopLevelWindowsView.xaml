@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="WindowFinder.TopLevelWindowsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:src="clr-namespace:WindowFinder"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Background="AliceBlue"
+    >
+  <UserControl.DataContext>
+    <src:TopLevelWindowsViewModel/>
+  </UserControl.DataContext>
+  
+  <DockPanel>
+    
+    <Grid DockPanel.Dock="Bottom">
+      <Slider x:Name="zoom" Margin="15,5" HorizontalAlignment="Right" Width="200" Minimum="0.1" Maximum="2" Value="1"/>
+    </Grid>
+    
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      
+      <Viewbox Width="{Binding TotalWidth}" Height="{Binding TotalHeight}">
+        <Viewbox.LayoutTransform>
+          <ScaleTransform ScaleX="{Binding Value, ElementName=zoom}" ScaleY="{Binding Value, ElementName=zoom}"/>
+        </Viewbox.LayoutTransform>
+        
+        <ItemsControl ItemsSource="{Binding TopLevelWindows}" Width="{Binding TotalWidth}" Height="{Binding TotalHeight}" Margin="{Binding TotalMargin}">
+
+          <ItemsControl.ItemContainerStyle>
+            <Style TargetType="ContentPresenter">
+              <Setter Property="Canvas.Left" Value="{Binding Rect.Left}"/>
+              <Setter Property="Canvas.Top" Value="{Binding Rect.Top}"/>
+            </Style>
+          </ItemsControl.ItemContainerStyle>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border SnapsToDevicePixels="True" Width="{Binding Rect.Width}" Height="{Binding Rect.Height}" 
+                    Background="{x:Null}" BorderThickness="1" BorderBrush="Blue" CornerRadius="2" MinHeight="10" MinWidth="50"
+                    ToolTip="{Binding Process}" >
+                <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="Blue" Foreground="White"
+                         Text="{Binding Text}" FontSize="8" 
+                         MouseLeftButtonDown="caption_MouseLeftButtonDown"/>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <Canvas/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+        </ItemsControl>
+      </Viewbox>
+    </ScrollViewer>
+  </DockPanel>
+
+</UserControl>
